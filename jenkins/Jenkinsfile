@@ -1,0 +1,53 @@
+pipeline {
+  agent any
+
+  environment {
+    IMAGE_NAME = 'shoes-shop-app'
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Install Dependencies') {
+      steps {
+        dir('app') {
+          sh 'npm ci'
+        }
+      }
+    }
+
+    stage('Test') {
+      steps {
+        dir('app') {
+          sh 'npm test'
+        }
+      }
+    }
+
+    stage('Build Docker Image') {
+      steps {
+        sh 'docker build -t $IMAGE_NAME:$BUILD_NUMBER -t $IMAGE_NAME:latest ./app'
+      }
+    }
+
+    stage('Deploy') {
+      steps {
+        sh 'docker compose up -d --build app mongo'
+      }
+    }
+  }
+
+  post {
+    success {
+      echo 'CI/CD pipeline completed successfully.'
+    }
+
+    failure {
+      echo 'CI/CD pipeline failed.'
+    }
+  }
+}
