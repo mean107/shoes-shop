@@ -2,7 +2,6 @@ services:
   app:
     build:
       context: ./app
-    container_name: shoes-shop-app
     ports:
       - "3000:3000"
     environment:
@@ -14,7 +13,6 @@ services:
 
   mongo:
     image: mongo:7
-    container_name: shoes-shop-mongo
     ports:
       - "27017:27017"
     volumes:
