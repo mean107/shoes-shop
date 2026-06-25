@@ -21,6 +21,11 @@ const shoeSchema = new mongoose.Schema(
       type: Number,
       required: true,
       min: 1
+    },
+    status: {
+      type: String,
+      enum: ['available', 'out of stock'],
+      default: 'available'
     }
   },
   {

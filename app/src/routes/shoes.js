@@ -14,7 +14,8 @@ router.post('/', async (req, res) => {
       name: req.body.name,
       brand: req.body.brand,
       price: req.body.price,
-      size: req.body.size
+      size: req.body.size,
+      status: req.body.status
     });
 
     res.status(201).json(shoe);
@@ -33,7 +34,8 @@ router.put('/:id', async (req, res) => {
         name: req.body.name,
         brand: req.body.brand,
         price: req.body.price,
-        size: req.body.size
+        size: req.body.size,
+        status: req.body.status
       },
       {
         new: true,

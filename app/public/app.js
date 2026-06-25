@@ -4,6 +4,7 @@ const nameInput = document.getElementById('name');
 const brandInput = document.getElementById('brand');
 const priceInput = document.getElementById('price');
 const sizeInput = document.getElementById('size');
+const statusInput = document.getElementById('status');
 const shoeList = document.getElementById('shoe-list');
 const message = document.getElementById('message');
 const resetButton = document.getElementById('reset-button');
@@ -28,7 +29,7 @@ async function loadShoes() {
     card.innerHTML = `
       <h3>${shoe.name}</h3>
       <div class="shoe-meta">
-        Brand: ${shoe.brand} | Price: $${shoe.price} | Size: ${shoe.size}
+        Brand: ${shoe.brand} | Price: $${shoe.price} | Size: ${shoe.size} | Status: ${shoe.status}
       </div>
       <div class="card-actions">
         <button type="button" class="secondary" data-action="edit">Edit</button>
@@ -42,6 +43,7 @@ async function loadShoes() {
       brandInput.value = shoe.brand;
       priceInput.value = shoe.price;
       sizeInput.value = shoe.size;
+      statusInput.value = shoe.status || 'available';
     });
 
     card.querySelector('[data-action="delete"]').addEventListener('click', async () => {
@@ -69,7 +71,8 @@ form.addEventListener('submit', async (event) => {
     name: nameInput.value,
     brand: brandInput.value,
     price: Number(priceInput.value),
-    size: Number(sizeInput.value)
+    size: Number(sizeInput.value),
+    status: statusInput.value
   };
 
   const id = shoeIdInput.value;

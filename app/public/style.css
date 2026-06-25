@@ -51,7 +51,8 @@ label {
   font-weight: 600;
 }
 
-input {
+input,
+select {
   padding: 10px 12px;
   border: 1px solid #bcccdc;
   border-radius: 4px;
