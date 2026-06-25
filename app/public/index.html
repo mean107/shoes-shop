@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shoes Shop</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="header">
+      <h1>Shoes Shop</h1>
+      <p>Simple product catalog for DevOps CI/CD demo</p>
+    </section>
+
+    <section class="panel">
+      <h2>Add / Update Shoe</h2>
+
+      <form id="shoe-form">
+        <input type="hidden" id="shoe-id" />
+
+        <label>
+          Name
+          <input id="name" type="text" placeholder="Air Zoom Pegasus" required />
+        </label>
+
+        <label>
+          Brand
+          <input id="brand" type="text" placeholder="Nike" required />
+        </label>
+
+        <label>
+          Price
+          <input id="price" type="number" min="0" placeholder="120" required />
+        </label>
+
+        <label>
+          Size
+          <input id="size" type="number" min="1" placeholder="42" required />
+        </label>
+
+        <div class="actions">
+          <button type="submit">Save</button>
+          <button type="button" id="reset-button">Reset</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>Products</h2>
+      <div id="message"></div>
+      <div id="shoe-list" class="shoe-list"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
