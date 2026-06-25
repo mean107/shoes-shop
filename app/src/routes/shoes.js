@@ -3,6 +3,24 @@ const Shoe = require('../models/Shoe');
 
 const router = express.Router();
 
+router.get('/stats', async (req, res) => {
+  const shoes = await Shoe.find();
+
+  const total = shoes.length;
+  const inStock = shoes.filter((shoe) => (shoe.status || 'available') === 'available').length;
+  const outOfStock = shoes.filter((shoe) => shoe.status === 'out of stock').length;
+
+  const totalPrice = shoes.reduce((sum, shoe) => sum + shoe.price, 0);
+  const averagePrice = total === 0 ? 0 : Math.round(totalPrice / total);
+
+  res.json({
+    total,
+    inStock,
+    outOfStock,
+    averagePrice
+  });
+});
+
 router.get('/', async (req, res) => {
   const shoes = await Shoe.find().sort({ createdAt: -1 });
   res.json(shoes);
