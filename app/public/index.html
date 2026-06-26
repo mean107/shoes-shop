@@ -20,60 +20,16 @@
       </div>
     </section>
 
-    <section class="dashboard">
-      <section class="panel form-panel">
-        <div class="section-title">
-          <h2>Add / Update Shoe</h2>
-          <p id="form-mode">Create a new product</p>
-        </div>
-
-        <form id="shoe-form">
-          <input type="hidden" id="shoe-id" />
-
-          <label>
-            Name
-            <input id="name" type="text" placeholder="Air Zoom Pegasus" required />
-          </label>
-
-          <div class="field-row">
-            <label>
-              Brand
-              <input id="brand" type="text" placeholder="Nike" required />
-            </label>
-
-            <label>
-              Price
-              <input id="price" type="number" min="0" placeholder="120" required />
-            </label>
-          </div>
-
-          <div class="field-row">
-            <label>
-              Size
-              <input id="size" type="number" min="1" placeholder="42" required />
-            </label>
-
-            <label>
-              Status
-              <select id="status" required>
-                <option value="available">Available</option>
-                <option value="out of stock">Out of Stock</option>
-              </select>
-            </label>
-          </div>
-
-          <div class="actions">
-            <button type="submit">Save product</button>
-            <button type="button" id="reset-button">Reset</button>
-          </div>
-        </form>
-      </section>
-
-      <section class="panel products-panel">
-        <div class="section-title">
+    <section class="panel products-panel">
+      <div class="section-title">
+        <div>
           <h2>Products</h2>
           <p id="message">Loading products...</p>
         </div>
+        <button type="button" id="add-button">Add product</button>
+      </div>
+
+      <div class="catalog-shell">
         <div class="stats-grid">
           <div>
             <span id="available-count">0</span>
@@ -85,9 +41,66 @@
           </div>
         </div>
         <div id="shoe-list" class="shoe-list"></div>
-      </section>
+      </div>
     </section>
   </main>
+
+  <div id="shoe-modal" class="modal" aria-hidden="true">
+    <div class="modal-backdrop" data-action="close"></div>
+    <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">Product details</p>
+          <h2 id="modal-title">Add product</h2>
+        </div>
+        <button type="button" class="icon-button" id="close-modal" aria-label="Close modal">x</button>
+      </div>
+
+      <form id="shoe-form">
+        <input type="hidden" id="shoe-id" />
+
+        <label>
+          Name
+          <input id="name" type="text" placeholder="Air Zoom Pegasus" required />
+        </label>
+
+        <div class="field-row">
+          <label>
+            Brand
+            <input id="brand" type="text" placeholder="Nike" required />
+          </label>
+
+          <label>
+            Price
+            <input id="price" type="number" min="0" placeholder="120" required />
+          </label>
+        </div>
+
+        <div class="field-row">
+          <label>
+            Size
+            <input id="size" type="number" min="1" placeholder="42" required />
+          </label>
+
+          <label>
+            Status
+            <select id="status" required>
+              <option value="available">Available</option>
+              <option value="out of stock">Out of Stock</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="danger" id="delete-button">Delete</button>
+          <div>
+            <button type="button" class="secondary" id="reset-button">Clear</button>
+            <button type="submit" id="save-button">Create product</button>
+          </div>
+        </div>
+      </form>
+    </section>
+  </div>
 
   <script src="app.js"></script>
 </body>

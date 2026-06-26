@@ -8,13 +8,51 @@ const statusInput = document.getElementById('status');
 const shoeList = document.getElementById('shoe-list');
 const message = document.getElementById('message');
 const resetButton = document.getElementById('reset-button');
+const addButton = document.getElementById('add-button');
+const deleteButton = document.getElementById('delete-button');
+const saveButton = document.getElementById('save-button');
+const modal = document.getElementById('shoe-modal');
+const closeModalButton = document.getElementById('close-modal');
+const modalTitle = document.getElementById('modal-title');
 const totalCount = document.getElementById('total-count');
 const availableCount = document.getElementById('available-count');
 const outCount = document.getElementById('out-count');
-const formMode = document.getElementById('form-mode');
 
 function formatStatus(status) {
   return status === 'out of stock' ? 'Out of Stock' : 'Available';
+}
+
+function openModal() {
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('modal-open');
+  nameInput.focus();
+}
+
+function closeModal() {
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('modal-open');
+}
+
+function resetForm() {
+  shoeIdInput.value = '';
+  form.reset();
+  modalTitle.textContent = 'Add product';
+  saveButton.textContent = 'Create product';
+  deleteButton.hidden = true;
+}
+
+function fillForm(shoe) {
+  shoeIdInput.value = shoe._id;
+  nameInput.value = shoe.name;
+  brandInput.value = shoe.brand;
+  priceInput.value = shoe.price;
+  sizeInput.value = shoe.size;
+  statusInput.value = shoe.status || 'available';
+  modalTitle.textContent = shoe.name;
+  saveButton.textContent = 'Update product';
+  deleteButton.hidden = false;
 }
 
 function updateSummary(shoes) {
@@ -40,59 +78,40 @@ async function loadShoes() {
   }
 
   message.textContent = `${shoes.length} product${shoes.length === 1 ? '' : 's'}`;
+  shoeList.innerHTML = `
+    <div class="list-heading">
+      <span>Product</span>
+      <span>Price</span>
+      <span>Size</span>
+      <span>Updated</span>
+      <span>Status</span>
+    </div>
+  `;
 
   shoes.forEach((shoe) => {
-    const card = document.createElement('div');
-    card.className = 'shoe-card';
+    const row = document.createElement('button');
+    row.type = 'button';
+    row.className = 'shoe-row';
     const status = shoe.status || 'available';
 
-    card.innerHTML = `
-      <div class="shoe-top">
-        <div>
-          <div class="shoe-brand">${shoe.brand}</div>
-          <h3>${shoe.name}</h3>
-        </div>
-        <span class="status-badge ${status === 'available' ? 'available' : 'out'}">${formatStatus(status)}</span>
+    row.innerHTML = `
+      <div>
+        <div class="shoe-brand">${shoe.brand}</div>
+        <h3>${shoe.name}</h3>
       </div>
-      <div class="shoe-meta">
-        <span>Price: $${shoe.price}</span>
-        <span>Size: ${shoe.size}</span>
-        <span>Updated: ${new Date(shoe.updatedAt || shoe.createdAt).toLocaleDateString()}</span>
-      </div>
-      <div class="card-actions">
-        <button type="button" class="secondary" data-action="edit">Edit</button>
-        <button type="button" class="danger" data-action="delete">Delete</button>
-      </div>
+      <span>$${shoe.price}</span>
+      <span>${shoe.size}</span>
+      <span>${new Date(shoe.updatedAt || shoe.createdAt).toLocaleDateString()}</span>
+      <span class="status-badge ${status === 'available' ? 'available' : 'out'}">${formatStatus(status)}</span>
     `;
 
-    card.querySelector('[data-action="edit"]').addEventListener('click', () => {
-      shoeIdInput.value = shoe._id;
-      nameInput.value = shoe.name;
-      brandInput.value = shoe.brand;
-      priceInput.value = shoe.price;
-      sizeInput.value = shoe.size;
-      statusInput.value = shoe.status || 'available';
-      formMode.textContent = `Editing ${shoe.name}`;
-      nameInput.focus();
+    row.addEventListener('click', () => {
+      fillForm(shoe);
+      openModal();
     });
 
-    card.querySelector('[data-action="delete"]').addEventListener('click', async () => {
-      await fetch(`/api/shoes/${shoe._id}`, {
-        method: 'DELETE'
-      });
-
-      resetForm();
-      loadShoes();
-    });
-
-    shoeList.appendChild(card);
+    shoeList.appendChild(row);
   });
-}
-
-function resetForm() {
-  shoeIdInput.value = '';
-  form.reset();
-  formMode.textContent = 'Create a new product';
 }
 
 form.addEventListener('submit', async (event) => {
@@ -118,10 +137,44 @@ form.addEventListener('submit', async (event) => {
     body: JSON.stringify(payload)
   });
 
+  closeModal();
   resetForm();
   loadShoes();
 });
 
+deleteButton.addEventListener('click', async () => {
+  const id = shoeIdInput.value;
+
+  if (!id) {
+    return;
+  }
+
+  await fetch(`/api/shoes/${id}`, {
+    method: 'DELETE'
+  });
+
+  closeModal();
+  resetForm();
+  loadShoes();
+});
+
+addButton.addEventListener('click', () => {
+  resetForm();
+  openModal();
+});
+
 resetButton.addEventListener('click', resetForm);
+closeModalButton.addEventListener('click', closeModal);
+modal.addEventListener('click', (event) => {
+  if (event.target.dataset.action === 'close') {
+    closeModal();
+  }
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && modal.classList.contains('open')) {
+    closeModal();
+  }
+});
 
 loadShoes();
