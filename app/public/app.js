@@ -8,28 +8,56 @@ const statusInput = document.getElementById('status');
 const shoeList = document.getElementById('shoe-list');
 const message = document.getElementById('message');
 const resetButton = document.getElementById('reset-button');
+const totalCount = document.getElementById('total-count');
+const availableCount = document.getElementById('available-count');
+const outCount = document.getElementById('out-count');
+const formMode = document.getElementById('form-mode');
+
+function formatStatus(status) {
+  return status === 'out of stock' ? 'Out of Stock' : 'Available';
+}
+
+function updateSummary(shoes) {
+  const available = shoes.filter((shoe) => (shoe.status || 'available') === 'available').length;
+  const outOfStock = shoes.filter((shoe) => shoe.status === 'out of stock').length;
+
+  totalCount.textContent = shoes.length;
+  availableCount.textContent = available;
+  outCount.textContent = outOfStock;
+}
 
 async function loadShoes() {
   const response = await fetch('/api/shoes');
   const shoes = await response.json();
 
   shoeList.innerHTML = '';
+  updateSummary(shoes);
 
   if (shoes.length === 0) {
-    message.textContent = 'No products yet.';
+    message.textContent = 'No products yet';
+    shoeList.innerHTML = '<div class="empty-state">Add your first shoes product to start the catalog.</div>';
     return;
   }
 
-  message.textContent = '';
+  message.textContent = `${shoes.length} product${shoes.length === 1 ? '' : 's'}`;
 
   shoes.forEach((shoe) => {
     const card = document.createElement('div');
     card.className = 'shoe-card';
+    const status = shoe.status || 'available';
 
     card.innerHTML = `
-      <h3>${shoe.name}</h3>
+      <div class="shoe-top">
+        <div>
+          <div class="shoe-brand">${shoe.brand}</div>
+          <h3>${shoe.name}</h3>
+        </div>
+        <span class="status-badge ${status === 'available' ? 'available' : 'out'}">${formatStatus(status)}</span>
+      </div>
       <div class="shoe-meta">
-        Brand: ${shoe.brand} | Price: $${shoe.price} | Size: ${shoe.size} | Status: ${shoe.status}
+        <span>Price: $${shoe.price}</span>
+        <span>Size: ${shoe.size}</span>
+        <span>Updated: ${new Date(shoe.updatedAt || shoe.createdAt).toLocaleDateString()}</span>
       </div>
       <div class="card-actions">
         <button type="button" class="secondary" data-action="edit">Edit</button>
@@ -44,6 +72,8 @@ async function loadShoes() {
       priceInput.value = shoe.price;
       sizeInput.value = shoe.size;
       statusInput.value = shoe.status || 'available';
+      formMode.textContent = `Editing ${shoe.name}`;
+      nameInput.focus();
     });
 
     card.querySelector('[data-action="delete"]').addEventListener('click', async () => {
@@ -62,6 +92,7 @@ async function loadShoes() {
 function resetForm() {
   shoeIdInput.value = '';
   form.reset();
+  formMode.textContent = 'Create a new product';
 }
 
 form.addEventListener('submit', async (event) => {

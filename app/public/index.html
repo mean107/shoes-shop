@@ -4,59 +4,88 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Shoes Shop</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <main class="page">
     <section class="header">
-      <h1>Shoes Shop</h1>
-      <p>Simple product catalog for DevOps CI/CD demo</p>
+      <div>
+        <p class="eyebrow">DevOps demo catalog</p>
+        <h1>Shoes Shop</h1>
+        <p>Manage shoes inventory with a simple CRUD workflow backed by MongoDB.</p>
+      </div>
+      <div class="header-card">
+        <span id="total-count">0</span>
+        <small>products tracked</small>
+      </div>
     </section>
 
-    <section class="panel">
-      <h2>Add / Update Shoe</h2>
-
-      <form id="shoe-form">
-        <input type="hidden" id="shoe-id" />
-
-        <label>
-          Name
-          <input id="name" type="text" placeholder="Air Zoom Pegasus" required />
-        </label>
-
-        <label>
-          Brand
-          <input id="brand" type="text" placeholder="Nike" required />
-        </label>
-
-        <label>
-          Price
-          <input id="price" type="number" min="0" placeholder="120" required />
-        </label>
-
-        <label>
-          Size
-          <input id="size" type="number" min="1" placeholder="42" required />
-        </label>
-
-        <label>
-          Status
-          <select id="status" required>
-            <option value="available">Available</option>
-            <option value="out of stock">Out of Stock</option>
-          </select>
-
-        <div class="actions">
-          <button type="submit">Save</button>
-          <button type="button" id="reset-button">Reset</button>
+    <section class="dashboard">
+      <section class="panel form-panel">
+        <div class="section-title">
+          <h2>Add / Update Shoe</h2>
+          <p id="form-mode">Create a new product</p>
         </div>
-      </form>
-    </section>
 
-    <section class="panel">
-      <h2>Products</h2>
-      <div id="message"></div>
-      <div id="shoe-list" class="shoe-list"></div>
+        <form id="shoe-form">
+          <input type="hidden" id="shoe-id" />
+
+          <label>
+            Name
+            <input id="name" type="text" placeholder="Air Zoom Pegasus" required />
+          </label>
+
+          <div class="field-row">
+            <label>
+              Brand
+              <input id="brand" type="text" placeholder="Nike" required />
+            </label>
+
+            <label>
+              Price
+              <input id="price" type="number" min="0" placeholder="120" required />
+            </label>
+          </div>
+
+          <div class="field-row">
+            <label>
+              Size
+              <input id="size" type="number" min="1" placeholder="42" required />
+            </label>
+
+            <label>
+              Status
+              <select id="status" required>
+                <option value="available">Available</option>
+                <option value="out of stock">Out of Stock</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="actions">
+            <button type="submit">Save product</button>
+            <button type="button" id="reset-button">Reset</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel products-panel">
+        <div class="section-title">
+          <h2>Products</h2>
+          <p id="message">Loading products...</p>
+        </div>
+        <div class="stats-grid">
+          <div>
+            <span id="available-count">0</span>
+            <small>available</small>
+          </div>
+          <div>
+            <span id="out-count">0</span>
+            <small>out of stock</small>
+          </div>
+        </div>
+        <div id="shoe-list" class="shoe-list"></div>
+      </section>
     </section>
   </main>
 
